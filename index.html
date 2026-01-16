@@ -6,44 +6,22 @@
     <title>Salesforce Study</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-      .hero {
-        min-height: 80vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-      .role-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        width: 100%;
-        margin-top: 4rem;
-      }
-      .role-card {
-        padding: 2rem;
-        border-radius: var(--radius-lg);
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        cursor: pointer;
-        text-align: left;
-      }
-    </style>
   </head>
   <body>
     <div class="container">
       <nav>
         <div
+          <div
           style="
             font-weight: 700;
             font-size: 1.5rem;
             display: flex;
             gap: 0.5rem;
             align-items: center;
+            color: #fff;
           "
         >
+          >
           <i data-lucide="cloud" style="color: var(--color-primary)"></i> SF
           Study
         </div>
@@ -54,7 +32,7 @@
         <h1 class="animate-fade-in">
           Master the <span class="text-gradient">Salesforce Ecosystem</span>
         </h1>
-        <p class="animate-fade-in" style="font-size: 1.25rem; max-width: 600px">
+        <p class="animate-fade-in" style="max-width: 600px">
           Interactive role-based learning paths.
         </p>
 
@@ -62,7 +40,7 @@
           <a href="dashboard.html?role=admin" class="role-card card-hover">
             <i
               data-lucide="shield"
-              color="#009EDB"
+              color="#00A1E0"
               style="margin-bottom: 1rem"
             ></i>
             <h3>Administrator</h3>
@@ -71,7 +49,7 @@
           <a href="dashboard.html?role=developer" class="role-card card-hover">
             <i
               data-lucide="code"
-              color="#00CFC8"
+              color="#00D2BE"
               style="margin-bottom: 1rem"
             ></i>
             <h3>Developer</h3>
