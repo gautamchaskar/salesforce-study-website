@@ -1,10 +1,32 @@
-/* DATA */
+/* DATA STRUCTURE (unchanged) */
 const curriculum = {
   admin: {
     title: "Administrator",
     description: "Config & Security",
     color: "#009EDB",
-    modules: []
+    modules: [
+        {
+        id: "admin-m1",
+        title: "Module 1: Salesforce Fundamentals",
+        description: "Core concepts, Multi-tenant architecture, and Data Model.",
+        units: [
+          {
+            id: "admin-m1-u1",
+            title: "The Salesforce Platform",
+            type: "theory",
+            content: `
+# Welcome to Salesforce
+Salesforce is a cloud-based CRM platform providing a single view of your customers.
+
+### Key Concepts
+* **Multi-tenancy**: Shared infrastructure (building) with private data (apartment).
+* **Metadata-Driven**: Data stored separately from customizations.
+            `,
+            quiz: []
+          }
+        ]
+      }
+    ]
   },
   developer: {
     title: "Developer Interview Prep",
@@ -164,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderDashboard(roleId) {
     const role = curriculum[roleId];
-    if (!role) return document.body.innerHTML = '<div class="container"><h1>Role Not Found</h1><a href="index.html">Home</a></div>';
+    if (!role) return document.body.innerHTML = '<div class="container" style="margin-top:2rem"><h1>Role Not Found</h1><a href="index.html" class="btn btn-secondary">Go Home</a></div>';
 
     document.getElementById('role-title').innerText = role.title;
     document.getElementById('role-desc').innerText = role.description;
@@ -172,17 +194,18 @@ function renderDashboard(roleId) {
     const icons = { admin: 'shield', developer: 'code', qa: 'check-circle', ba: 'briefcase', architect: 'layers' };
     const iconContainer = document.getElementById('role-icon-container');
     if (iconContainer) {
-        iconContainer.style.backgroundColor = role.color + '20';
-        iconContainer.innerHTML = \`<i data-lucide="\${icons[roleId] || 'star'}" color="\${role.color}" width="32" height="32"></i>\`;
+        // Light Theme: subtle tint
+        iconContainer.style.backgroundColor = 'var(--bg-subtle)';
+        iconContainer.style.color = role.color; // Use brand color for icon
+        iconContainer.innerHTML = \`<i data-lucide="\${icons[roleId] || 'star'}" width="32" height="32"></i>\`;
         lucide.createIcons({ root: iconContainer });
     }
 
     const list = document.getElementById('modules-list');
     role.modules.forEach(mod => {
         const el = document.createElement('div');
-        el.className = 'glass-panel card-hover';
+        el.className = 'card'; // New Card Class
         el.style.padding = '1.5rem';
-        el.style.marginBottom = '1rem';
         el.style.cursor = 'pointer';
         el.onclick = () => window.location.href = \`module.html?role=\${roleId}&module=\${mod.id}\`;
         
@@ -190,7 +213,7 @@ function renderDashboard(roleId) {
             <div class="flex justify-between items-center">
                 <div>
                    <h3>\${mod.title}</h3>
-                   <p>\${mod.description}</p>
+                   <p style="margin:0">\${mod.description}</p>
                 </div>
                 <button class="btn btn-secondary">Start</button>
             </div>
@@ -205,15 +228,13 @@ function renderModule(roleId, moduleId) {
     if (!mod) return;
 
     document.getElementById('module-title-sidebar').innerText = mod.title;
-    document.getElementById('module-back-link').onclick = () => window.location.href = \`dashboard.html?role=\${roleId}\`;
+    // Back link handled by HTML
     
     const list = document.getElementById('units-list');
     mod.units.forEach((u, i) => {
         const item = document.createElement('div');
         item.innerText = u.title;
-        item.style.padding = '0.5rem';
-        item.style.cursor = 'pointer';
-        item.style.borderRadius = '6px';
+        item.className = 'sidebar-item'; // New Sidebar Class
         item.id = \`unit-item-\${i}\`;
         item.onclick = () => loadUnit(roleId, moduleId, i);
         list.appendChild(item);
@@ -231,9 +252,9 @@ function loadUnit(roleId, moduleId, index) {
     if (!unit) return;
 
     // UI Active State
-    document.querySelectorAll('#units-list > div').forEach((el, i) => {
-        el.style.background = i === index ? 'rgba(255,255,255,0.1)' : 'transparent';
-        el.style.color = i === index ? '#fff' : 'var(--text-secondary)';
+    document.querySelectorAll('.sidebar-item').forEach((el, i) => {
+        if (i === index) el.classList.add('active');
+        else el.classList.remove('active');
     });
 
     document.getElementById('unit-counter').innerText = \`Unit \${index + 1} / \${mod.units.length}\`;
@@ -250,13 +271,12 @@ function loadUnit(roleId, moduleId, index) {
         const transformer = new markmap.Transformer();
         const { root } = transformer.transform(unit.mindmap);
         const mm = markmap.Markmap.create('#markmap', null, root);
-        // Force resize after tab switch
         window.currentMarkmap = mm; 
     } else {
-        document.getElementById('markmap').innerHTML = ''; // Clear if no mindmap
+        document.getElementById('markmap').innerHTML = ''; 
     }
 
-    // 3. Render Practice (Q&A + Quiz)
+    // 3. Render Practice (Q&A)
     const qaContainer = document.getElementById('qa-container');
     qaContainer.innerHTML = '';
     if (unit.qa) {
@@ -266,10 +286,10 @@ function loadUnit(roleId, moduleId, index) {
             el.innerHTML = \`
                 <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
                     \${qaItem.q}
-                    <i data-lucide="chevron-down" class="accordion-icon"></i>
+                    <i data-lucide="chevron-down" width="16"></i>
                 </div>
                 <div class="accordion-content">
-                    <p style="margin-top:1rem">\${qaItem.a}</p>
+                    <p>\${qaItem.a}</p>
                 </div>
             \`;
             qaContainer.appendChild(el);
@@ -283,27 +303,27 @@ function loadUnit(roleId, moduleId, index) {
         quizDiv.style.display = 'block';
         const q = unit.quiz[0];
         document.getElementById('quiz-content').innerHTML = \`
-            <h3 style="font-size:1.1rem; margin-bottom:1rem">\${q.question}</h3>
+            <h3 style="margin-bottom:1rem">\${q.question}</h3>
             <div class="flex flex-col gap-2">
-                \${q.options.map((o, i) => \`<label style="padding:0.75rem; background:rgba(255,255,255,0.05); border-radius:8px; display:block; cursor:pointer"><input type="radio" name="q" value="\${i}"> \${o}</label>\`).join('')}
+                \${q.options.map((o, i) => \`<label style="padding:0.75rem; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); display:block; cursor:pointer"><input type="radio" name="q" value="\${i}"> <span style="margin-left:0.5rem">\${o}</span></label>\`).join('')}
             </div>
-            <button class="btn btn-primary" style="margin-top:1rem" onclick="checkQuiz(\${q.correctAnswer})">Submit</button>
-            <div id="quiz-result" style="margin-top:0.5rem"></div>
+            <button class="btn btn-primary" style="margin-top:1rem" onclick="checkQuiz(\${q.correctAnswer})">Submit Answer</button>
+            <div id="quiz-result" style="margin-top:1rem; font-weight:600"></div>
         \`;
     }
 
-    // Playground embedded in Learn
+    // Playground embedded
     const playground = document.getElementById('playground-container');
     playground.innerHTML = ''; 
     if (unit.type === 'code') {
         playground.innerHTML = \`
-            <div class="code-playground glass-panel">
-                <div class="playground-toolbar">
-                    <span>APEX EDITOR</span>
-                    <button class="btn btn-primary" onclick="runCode()" style="padding:0.4rem 0.8rem; height:auto; font-size:0.8rem">Run</button>
+            <div class="code-playground card-static">
+                <div style="padding:0.5rem 1rem; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; background: #f8fafc">
+                    <span style="font-size:0.8rem; font-weight:600; color:var(--text-secondary)">APEX Playground</span>
+                    <button class="btn btn-primary" onclick="runCode()" style="padding:0.25rem 0.75rem; font-size:0.75rem">Run</button>
                 </div>
                 <div id="monaco-host" style="height: 300px;"></div>
-                <div id="playground-output" class="playground-output" style="display:none"></div>
+                <div id="playground-output" style="display:none; padding:1rem; background:#0f172a; color:white; font-family:monospace; border-top:1px solid var(--border-subtle)"></div>
             </div>
         \`;
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs' }});
@@ -311,14 +331,14 @@ function loadUnit(roleId, moduleId, index) {
             if (editorInstance) editorInstance.dispose();
             const initialCode = (unit.content.match(/\`\`\`apex\\n([\s\S]*?)\`\`\`/)||[])[1] || '// Code here';
             editorInstance = monaco.editor.create(document.getElementById('monaco-host'), {
-                value: initialCode, language: 'java', theme: 'vs-dark', automaticLayout: true, minimap: {enabled: false}
+                value: initialCode, language: 'java', theme: 'vs-light', automaticLayout: true, minimap: {enabled: false}
             });
         });
     }
 
     // Nav Buttons
     const nextBtn = document.getElementById('next-btn');
-    nextBtn.innerHTML = index === mod.units.length - 1 ? 'Finish <i data-lucide="check"></i>' : 'Next <i data-lucide="chevron-right"></i>';
+    nextBtn.innerHTML = index === mod.units.length - 1 ? 'Finish Module <i data-lucide="check" width="16"></i>' : 'Next Unit <i data-lucide="arrow-right" width="16"></i>';
     nextBtn.onclick = () => {
          if (index < mod.units.length - 1) loadUnit(roleId, moduleId, index + 1);
          else window.location.href = \`dashboard.html?role=\${roleId}\`;
@@ -332,14 +352,10 @@ window.switchTab = function(tabName) {
     document.getElementById(\`view-\${tabName}\`).style.display = 'block';
     
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    
-    // Find button by onclick attribute match (simple hack) or ID if we set them
-    // Let's rely on event.target if passed, or just query.
-    // Better: Add IDs to buttons in HTML
     document.getElementById(\`tab-\${tabName}\`)?.classList.add('active');
 
     if (tabName === 'visualize' && window.currentMarkmap) {
-        window.currentMarkmap.fit(); // Resize SVG
+        window.currentMarkmap.fit(); 
     }
 }
 
@@ -359,5 +375,10 @@ window.checkQuiz = function(ans) {
      const selected = document.querySelector('input[name="q"]:checked');
      if (!selected) return;
      const isCorrect = parseInt(selected.value) === ans;
-     document.getElementById('quiz-result').innerHTML = isCorrect ? '<span style="color:var(--color-success)">Correct!</span>' : '<span style="color:var(--color-danger)">Incorrect</span>';
+     const resDiv = document.getElementById('quiz-result');
+     if(isCorrect) {
+         resDiv.innerHTML = '<span style="color:var(--primary)">Correct! Great job.</span>';
+     } else {
+         resDiv.innerHTML = '<span style="color:#ef4444">Incorrect. Try again.</span>';
+     }
 }
