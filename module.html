@@ -14,138 +14,161 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div class="container">
-      <nav>
+    <div class="container module-layout">
+      <!-- Sticky Sidebar -->
+      <aside class="sidebar">
         <div
-          id="module-back-link"
+          onclick="window.location.href='dashboard.html'"
           style="
-            cursor: pointer;
             display: flex;
-            gap: 0.5rem;
             align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 0;
+            margin-bottom: 1rem;
             color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
           "
         >
-          <i data-lucide="chevron-left"></i> Dashboard
+          <i data-lucide="arrow-left" width="16"></i> Back to Dashboard
         </div>
-        <span id="unit-counter" style="color: var(--text-secondary)"></span>
-      </nav>
 
-      <div
-        class="flex gap-8"
-        style="align-items: flex-start; padding-bottom: 4rem"
-      >
-        <aside
-          class="glass-panel"
+        <h4
+          id="module-title-sidebar"
           style="
-            width: 250px;
-            padding: 1.5rem;
-            display: none;
-            @media (min-width: 768px) {
-              display: block;
-            }
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
           "
         >
-          <h4 id="module-title-sidebar" <h4 id="module-title-sidebar">
-            Module
-          </h4>
-          <div
-            id="units-list"
-            class="flex flex-col gap-2"
-            style="margin-top: 1rem"
-          ></div>
-        </aside>
+          Loading...
+        </h4>
+        <div id="units-list" class="flex flex-col"></div>
+      </aside>
 
-        <main style="flex: 1; max-width: 800px; margin: 0 auto">
-          <div class="glass-panel animate-fade-in" style="padding: 3rem">
+      <!-- Main Content -->
+      <main style="padding-top: 2rem; padding-bottom: 6rem; min-width: 0">
+        <div
+          class="flex justify-between items-center"
+          style="
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 1rem;
+          "
+        >
+          <div>
+            <span
+              id="unit-counter"
+              style="
+                color: var(--text-tertiary);
+                font-size: 0.875rem;
+                font-weight: 500;
+              "
+              >Unit 1/1</span
+            >
             <h1
               id="unit-title"
-              style="
-                margin-bottom: 2rem;
-                border-bottom: 1px solid var(--border-glass);
-                padding-bottom: 1rem;
-              "
+              style="margin: 0.5rem 0 0 0; font-size: 1.875rem"
             >
               Loading...
             </h1>
-
-            <!-- Tabs -->
-            <div
-              class="tabs flex gap-4"
-              style="
-                margin-bottom: 2rem;
-                border-bottom: 1px solid var(--border-glass);
-                padding-bottom: 1rem;
-              "
-            >
-              <button
-                id="tab-learn"
-                class="tab-btn active"
-                onclick="switchTab('learn')"
-              >
-                Learn
-              </button>
-              <button
-                id="tab-visualize"
-                class="tab-btn"
-                onclick="switchTab('visualize')"
-              >
-                Visualize
-              </button>
-              <button
-                id="tab-practice"
-                class="tab-btn"
-                onclick="switchTab('practice')"
-              >
-                Practice
-              </button>
-            </div>
-
-            <!-- Views -->
-            <div id="view-learn" class="tab-view" style="display: block">
-              <div id="markdown-content"></div>
-              <div id="playground-container" style="margin-top: 2rem"></div>
-            </div>
-
-            <div id="view-visualize" class="tab-view" style="display: none">
-              <div
-                class="glass-panel"
-                style="
-                  background: rgba(255, 255, 255, 0.02);
-                  height: 500px;
-                  padding: 0;
-                  overflow: hidden;
-                "
-              >
-                <svg id="markmap" style="width: 100%; height: 100%"></svg>
-              </div>
-            </div>
-
-            <div id="view-practice" class="tab-view" style="display: none">
-              <div id="qa-container"></div>
-              <div
-                id="quiz-container"
-                style="
-                  margin-top: 2rem;
-                  padding: 1.5rem;
-                  background: var(--bg-glass);
-                  border-radius: var(--radius-md);
-                  display: none;
-                "
-              >
-                <div id="quiz-content"></div>
-              </div>
-            </div>
-            <div
-              class="flex justify-between items-center"
-              style="margin-top: 4rem"
-            >
-              <button class="btn btn-secondary" disabled>Previous</button>
-              <button id="next-btn" class="btn btn-primary">Next</button>
-            </div>
           </div>
-        </main>
-      </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs flex gap-4">
+          <button
+            id="tab-learn"
+            class="tab-btn active"
+            onclick="switchTab('learn')"
+          >
+            Learn
+          </button>
+          <button
+            id="tab-visualize"
+            class="tab-btn"
+            onclick="switchTab('visualize')"
+          >
+            Visualize
+          </button>
+          <button
+            id="tab-practice"
+            class="tab-btn"
+            onclick="switchTab('practice')"
+          >
+            Practice
+          </button>
+        </div>
+
+        <!-- Learn View -->
+        <div id="view-learn" class="tab-view" style="display: block">
+          <div id="markdown-content"></div>
+          <!-- Playground embedded in Learn view if code unit -->
+          <div id="playground-container" style="margin-top: 2rem"></div>
+        </div>
+
+        <!-- Visualize View -->
+        <div id="view-visualize" class="tab-view" style="display: none">
+          <div
+            class="card-static"
+            style="
+              height: 600px;
+              padding: 0;
+              overflow: hidden;
+              background: #fafafa;
+            "
+          >
+            <svg id="markmap" style="width: 100%; height: 100%"></svg>
+          </div>
+          <p
+            style="
+              text-align: center;
+              margin-top: 1rem;
+              font-size: 0.875rem;
+              color: var(--text-tertiary);
+            "
+          >
+            Interactive Concept Map
+          </p>
+        </div>
+
+        <!-- Practice View -->
+        <div id="view-practice" class="tab-view" style="display: none">
+          <div id="qa-container"></div>
+
+          <div
+            id="quiz-container"
+            class="card"
+            style="
+              margin-top: 2rem;
+              padding: 2rem;
+              background: var(--bg-subtle);
+              border-color: var(--border-subtle);
+              display: none;
+            "
+          >
+            <div id="quiz-content"></div>
+          </div>
+        </div>
+
+        <!-- Footer Nav -->
+        <div
+          class="flex justify-between items-center"
+          style="
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+          "
+        >
+          <button class="btn btn-secondary" disabled>Previous Unit</button>
+          <button id="next-btn" class="btn btn-primary">
+            Next Unit <i data-lucide="arrow-right" width="16"></i>
+          </button>
+        </div>
+      </main>
     </div>
   </body>
 </html>
