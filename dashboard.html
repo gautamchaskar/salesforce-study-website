@@ -18,6 +18,17 @@
         >
           <i data-lucide="arrow-left" width="16"></i> Back to Roles
         </a>
+
+        <div class="search-container">
+          <i data-lucide="search" width="16" class="search-icon"></i>
+          <input
+            type="text"
+            id="module-search"
+            class="search-input"
+            placeholder="Search modules..."
+            oninput="filterModules(this.value)"
+          />
+        </div>
       </nav>
 
       <div style="padding: 2rem 0">
