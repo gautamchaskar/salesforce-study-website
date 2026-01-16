@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salesforce Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .hero {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      .role-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        width: 100%;
+        margin-top: 4rem;
+      }
+      .role-card {
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        cursor: pointer;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <div
+          style="
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+          "
+        >
+          <i data-lucide="cloud" style="color: var(--color-primary)"></i> SF
+          Study
+        </div>
+        <a href="#roles" class="btn btn-primary">Start</a>
+      </nav>
+
+      <section class="hero">
+        <h1 class="animate-fade-in">
+          Master the <span class="text-gradient">Salesforce Ecosystem</span>
+        </h1>
+        <p class="animate-fade-in" style="font-size: 1.25rem; max-width: 600px">
+          Interactive role-based learning paths.
+        </p>
+
+        <div id="roles" class="role-grid animate-fade-in">
+          <a href="dashboard.html?role=admin" class="role-card card-hover">
+            <i
+              data-lucide="shield"
+              color="#009EDB"
+              style="margin-bottom: 1rem"
+            ></i>
+            <h3>Administrator</h3>
+            <p>Configuration & Security</p>
+          </a>
+          <a href="dashboard.html?role=developer" class="role-card card-hover">
+            <i
+              data-lucide="code"
+              color="#00CFC8"
+              style="margin-bottom: 1rem"
+            ></i>
+            <h3>Developer</h3>
+            <p>Apex & LWC</p>
+          </a>
+          <a href="dashboard.html?role=qa" class="role-card card-hover">
+            <i
+              data-lucide="check-circle"
+              color="#FFB700"
+              style="margin-bottom: 1rem"
+            ></i>
+            <h3>QA Engineer</h3>
+            <p>Testing Strategies</p>
+          </a>
+          <a href="dashboard.html?role=ba" class="role-card card-hover">
+            <i
+              data-lucide="briefcase"
+              color="#FF5D5D"
+              style="margin-bottom: 1rem"
+            ></i>
+            <h3>Analyst</h3>
+            <p>Requirements</p>
+          </a>
+          <a href="dashboard.html?role=architect" class="role-card card-hover">
+            <i
+              data-lucide="layers"
+              color="#9059FF"
+              style="margin-bottom: 1rem"
+            ></i>
+            <h3>Architect</h3>
+            <p>Scalable Design</p>
+          </a>
+        </div>
+      </section>
+    </div>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/loader.js"></script>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <div
+          id="module-back-link"
+          style="
+            cursor: pointer;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            color: var(--text-secondary);
+          "
+        >
+          <i data-lucide="chevron-left"></i> Dashboard
+        </div>
+        <span id="unit-counter" style="color: var(--text-secondary)"></span>
+      </nav>
+
+      <div
+        class="flex gap-8"
+        style="align-items: flex-start; padding-bottom: 4rem"
+      >
+        <aside
+          class="glass-panel"
+          style="
+            width: 250px;
+            padding: 1.5rem;
+            display: none;
+            @media (min-width: 768px) {
+              display: block;
+            }
+          "
+        >
+          <h4
+            id="module-title-sidebar"
+            style="
+              font-size: 0.8rem;
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              color: var(--text-secondary);
+            "
+          >
+            Module
+          </h4>
+          <div
+            id="units-list"
+            class="flex flex-col gap-2"
+            style="margin-top: 1rem"
+          ></div>
+        </aside>
+
+        <main style="flex: 1; max-width: 800px; margin: 0 auto">
+          <div class="glass-panel animate-fade-in" style="padding: 3rem">
+            <h1
+              id="unit-title"
+              style="
+                margin-bottom: 2rem;
+                border-bottom: 1px solid var(--border-subtle);
+                padding-bottom: 1rem;
+              "
+            >
+              Loading...
+            </h1>
+            <div id="markdown-content"></div>
+            <div id="playground-container" style="margin-top: 2rem"></div>
+            <div
+              id="quiz-container"
+              style="
+                margin-top: 3rem;
+                padding: 1.5rem;
+                background: var(--bg-surface-elevated);
+                border-radius: 12px;
+                display: none;
+              "
+            >
+              <div id="quiz-content"></div>
+            </div>
+            <div
+              class="flex justify-between items-center"
+              style="margin-top: 4rem"
+            >
+              <button class="btn btn-secondary" disabled>Previous</button>
+              <button id="next-btn" class="btn btn-primary">Next</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

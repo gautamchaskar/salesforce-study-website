@@ -1,0 +1,207 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  /* Brand Colors */
+  --color-primary: #009edb;
+  --color-primary-dark: #0070e0;
+  --color-primary-light: #4bd3ff;
+  --color-secondary: #00cfc8;
+  --color-accent: #ff9900;
+  --color-success: #04e38d;
+  --color-danger: #ff5d5d;
+  --color-warning: #ffb700;
+
+  /* Backgrounds */
+  --bg-body: #0b0e14;
+  --bg-surface: #151921;
+  --bg-surface-elevated: #1e232f;
+  --bg-glass: rgba(21, 25, 33, 0.7);
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+
+  /* UI */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --radius-md: 12px;
+  --radius-lg: 24px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Outfit", sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  background-image: radial-gradient(
+      circle at 15% 50%,
+      rgba(0, 158, 219, 0.08),
+      transparent 25%
+    ),
+    radial-gradient(circle at 85% 30%, rgba(0, 207, 200, 0.08), transparent 25%);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+.items-center {
+  align-items: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+
+/* Panels */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    border-color 0.3s;
+}
+.card-hover:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-strong);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}
+
+/* Typography */
+h1 {
+  font-size: 3.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+.text-gradient {
+  background: linear-gradient(
+    to right,
+    var(--color-primary-light),
+    var(--color-secondary)
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+  color: white;
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+.btn-secondary:hover {
+  border-color: var(--text-secondary);
+}
+
+/* Animation */
+.animate-fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Navbar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+/* Code Editor */
+.code-playground {
+  margin: 1.5rem 0;
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+.playground-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface-elevated);
+}
+.playground-output {
+  background: #1e1e1e;
+  border-top: 1px solid var(--border-subtle);
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
