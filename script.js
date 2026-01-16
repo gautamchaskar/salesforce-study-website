@@ -194,8 +194,8 @@ function renderDashboard(roleId) {
     const icons = { admin: 'shield', developer: 'code', qa: 'check-circle', ba: 'briefcase', architect: 'layers' };
     const iconContainer = document.getElementById('role-icon-container');
     if (iconContainer) {
-        // Light Theme: subtle tint
-        iconContainer.style.backgroundColor = 'var(--bg-subtle)';
+        // Dark Theme: Subtle transparent background
+        iconContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
         iconContainer.style.color = role.color; // Use brand color for icon
         iconContainer.innerHTML = \`<i data-lucide="\${icons[roleId] || 'star'}" width="32" height="32"></i>\`;
         lucide.createIcons({ root: iconContainer });
@@ -204,7 +204,7 @@ function renderDashboard(roleId) {
     const list = document.getElementById('modules-list');
     role.modules.forEach(mod => {
         const el = document.createElement('div');
-        el.className = 'card'; // New Card Class
+        el.className = 'card'; // Glass Card
         el.style.padding = '1.5rem';
         el.style.cursor = 'pointer';
         el.onclick = () => window.location.href = \`module.html?role=\${roleId}&module=\${mod.id}\`;
@@ -212,8 +212,8 @@ function renderDashboard(roleId) {
         el.innerHTML = \`
             <div class="flex justify-between items-center">
                 <div>
-                   <h3>\${mod.title}</h3>
-                   <p style="margin:0">\${mod.description}</p>
+                   <h3 style="color:#fff; margin-bottom:0.5rem">\${mod.title}</h3>
+                   <p style="margin:0; color:var(--text-secondary)">\${mod.description}</p>
                 </div>
                 <button class="btn btn-secondary">Start</button>
             </div>
@@ -303,9 +303,9 @@ function loadUnit(roleId, moduleId, index) {
         quizDiv.style.display = 'block';
         const q = unit.quiz[0];
         document.getElementById('quiz-content').innerHTML = \`
-            <h3 style="margin-bottom:1rem">\${q.question}</h3>
+            <h3 style="margin-bottom:1rem; color:#fff">\${q.question}</h3>
             <div class="flex flex-col gap-2">
-                \${q.options.map((o, i) => \`<label style="padding:0.75rem; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); display:block; cursor:pointer"><input type="radio" name="q" value="\${i}"> <span style="margin-left:0.5rem">\${o}</span></label>\`).join('')}
+                \${q.options.map((o, i) => \`<label style="padding:0.75rem; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); display:block; cursor:pointer" class="quiz-option"><input type="radio" name="q" value="\${i}"> <span style="margin-left:0.5rem; color:var(--text-secondary)">\${o}</span></label>\`).join('')}
             </div>
             <button class="btn btn-primary" style="margin-top:1rem" onclick="checkQuiz(\${q.correctAnswer})">Submit Answer</button>
             <div id="quiz-result" style="margin-top:1rem; font-weight:600"></div>
@@ -318,8 +318,8 @@ function loadUnit(roleId, moduleId, index) {
     if (unit.type === 'code') {
         playground.innerHTML = \`
             <div class="code-playground card-static">
-                <div style="padding:0.5rem 1rem; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; background: #f8fafc">
-                    <span style="font-size:0.8rem; font-weight:600; color:var(--text-secondary)">APEX Playground</span>
+                <div style="padding:0.5rem 1rem; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; background: rgba(0,0,0,0.2)">
+                    <span style="font-size:0.8rem; font-weight:600; color:var(--text-tertiary)">APEX Playground</span>
                     <button class="btn btn-primary" onclick="runCode()" style="padding:0.25rem 0.75rem; font-size:0.75rem">Run</button>
                 </div>
                 <div id="monaco-host" style="height: 300px;"></div>
@@ -331,7 +331,7 @@ function loadUnit(roleId, moduleId, index) {
             if (editorInstance) editorInstance.dispose();
             const initialCode = (unit.content.match(/\`\`\`apex\\n([\s\S]*?)\`\`\`/)||[])[1] || '// Code here';
             editorInstance = monaco.editor.create(document.getElementById('monaco-host'), {
-                value: initialCode, language: 'java', theme: 'vs-light', automaticLayout: true, minimap: {enabled: false}
+                value: initialCode, language: 'java', theme: 'vs-dark', automaticLayout: true, minimap: {enabled: false}
             });
         });
     }
@@ -377,8 +377,8 @@ window.checkQuiz = function(ans) {
      const isCorrect = parseInt(selected.value) === ans;
      const resDiv = document.getElementById('quiz-result');
      if(isCorrect) {
-         resDiv.innerHTML = '<span style="color:var(--primary)">Correct! Great job.</span>';
+         resDiv.innerHTML = '<span style="color:var(--color-success)">Correct! Great job.</span>';
      } else {
-         resDiv.innerHTML = '<span style="color:#ef4444">Incorrect. Try again.</span>';
+         resDiv.innerHTML = '<span style="color:var(--color-danger)">Incorrect. Try again.</span>';
      }
 }
