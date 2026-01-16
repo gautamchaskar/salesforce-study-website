@@ -1,4 +1,4 @@
-/* DATA STRUCTURE (unchanged) */
+/* DATA STRUCTURE - EXPANDED */
 const curriculum = {
   admin: {
     title: "Administrator",
@@ -22,7 +22,27 @@ Salesforce is a cloud-based CRM platform providing a single view of your custome
 * **Multi-tenancy**: Shared infrastructure (building) with private data (apartment).
 * **Metadata-Driven**: Data stored separately from customizations.
             `,
-            quiz: []
+            quiz: [{ question: "What is Multi-tenancy?", options: ["Multiple orgs on one server", "One org on multiple servers", "Local hosting"], correctAnswer: 0 }]
+          },
+          {
+            id: "admin-m1-u2",
+            title: "Data Security Model",
+            type: "theory",
+            content: `
+# Data Security Model
+Security is controlled at four levels:
+1.  **Org Level**: IP Ranges, Login Hours.
+2.  **Object Level**: Profiles, Permission Sets (CRED).
+3.  **Field Level**: FLS (Visible/Read-Only).
+4.  **Record Level**: OWD, Roles, Sharing Rules.
+
+## Organization-Wide Defaults (OWD)
+Base level of access.
+*   **Private**: Only owner sees their records.
+*   **Public Read Only**: Everyone can view.
+*   **Public Read/Write**: Everyone can edit.
+            `,
+            quiz: [{ question: "Which manages Record Level Security?", options: ["Profiles", "OWD", "Page Layouts"], correctAnswer: 1 }]
           }
         ]
       }
@@ -132,6 +152,46 @@ Multi-tenancy means resources are shared. Limits prevent one process from monopo
         ]
       },
       {
+          id: "dev-async",
+          title: "Asynchronous Apex",
+          description: "Future, Batch, Queueable, Scheduled.",
+          units: [
+              {
+                  id: "async-1",
+                  title: "Comparison Matrix",
+                  type: "theory",
+                  content: `
+# Asynchronous Apex
+Used for long-running processes or integration.
+
+| Type | Common Use | Limits |
+| :--- | :--- | :--- |
+| **Future** | Callouts, isolate DML | Primitive args only, No monitoring ID |
+| **Batch** | Process millions of records | 50M records, chunking |
+| **Queueable** | Complex jobs, chaining | Object args allowed, Returns ID |
+| **Scheduled** | Run at specific time | Cron expression |
+
+\`\`\`java
+// Future Method
+@future
+public static void myFutureMethod() {
+    // Audit logging...
+}
+
+// Queueable
+public class MyQueueable implements Queueable {
+    public void execute(QueueableContext context) {
+        // Chain job
+        System.enqueueJob(new SecondJob());
+    }
+}
+\`\`\`
+                  `,
+                  quiz: [{ question: "Which Async type allows Object parameters?", options: ["@future", "Queueable", "Both"], correctAnswer: 1 }]
+              }
+          ]
+      },
+      {
         id: "top-lwc",
         title: "LWC Interview Questions",
         description: "Lifecycle, Communication, and DOM.",
@@ -190,11 +250,36 @@ export default class Child extends LightningElement {
 };
 
 
+/* PROGRESS MANAGER */
+const ProgressManager = {
+    getKey: (roleId) => \`sf-study-progress-\${roleId}\`,
+    get: (roleId) => JSON.parse(localStorage.getItem(ProgressManager.getKey(roleId))) || [],
+    save: (roleId, unitId) => {
+        const current = ProgressManager.get(roleId);
+        if(!current.includes(unitId)) {
+            current.push(unitId);
+            localStorage.setItem(ProgressManager.getKey(roleId), JSON.stringify(current));
+            showToast('Unit marked as complete!', 'success');
+        }
+    },
+    remove: (roleId, unitId) => {
+        let current = ProgressManager.get(roleId);
+        current = current.filter(id => id !== unitId);
+        localStorage.setItem(ProgressManager.getKey(roleId), JSON.stringify(current));
+    },
+    isComplete: (roleId, unitId) => ProgressManager.get(roleId).includes(unitId),
+    getPercentage: (roleId, totalUnits) => {
+        const completed = ProgressManager.get(roleId).length;
+        if(totalUnits === 0) return 0;
+        return Math.round((completed / totalUnits) * 100);
+    }
+};
+
+
 /* APP LOGIC */
 document.addEventListener('DOMContentLoaded', () => {
     if (window.lucide) lucide.createIcons();
     
-    // Toast Container
     const toast = document.createElement('div');
     toast.id = 'toast';
     toast.className = 'toast';
@@ -209,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderModule(params.get('role'), params.get('module'));
     }
     
-    // Intersection Observer for Animations
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if(entry.isIntersecting) {
@@ -218,13 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, { threshold: 0.1 });
     
-    // Observer applied dynamically after render
     window.observeAnimations = () => {
         document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
     };
 });
 
-// Toast Notification
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
     const icon = type === 'success' ? 'check-circle' : 'alert-circle';
@@ -237,7 +319,6 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Search Filter
 window.filterModules = function(query) {
     const term = query.toLowerCase();
     const cards = document.querySelectorAll('#modules-list > div');
@@ -270,19 +351,30 @@ function renderDashboard(roleId) {
 
     const list = document.getElementById('modules-list');
     role.modules.forEach((mod, index) => {
+        // Calculate Progress
+        const totalUnits = mod.units.length;
+        const completedCount = mod.units.filter(u => ProgressManager.isComplete(roleId, u.id)).length;
+        const percent = totalUnits > 0 ? Math.round((completedCount/totalUnits)*100) : 0;
+
         const el = document.createElement('div');
-        el.className = \`card animate-in stagger-\${(index % 3) + 1}\`; // Animation Class
+        el.className = \`card animate-in stagger-\${(index % 3) + 1}\`; 
         el.style.padding = '1.5rem';
         el.style.cursor = 'pointer';
         el.onclick = () => window.location.href = \`module.html?role=\${roleId}&module=\${mod.id}\`;
         
         el.innerHTML = \`
             <div class="flex justify-between items-center">
-                <div>
+                <div style="flex:1">
                    <h3 style="color:#fff; margin-bottom:0.5rem">\${mod.title}</h3>
                    <p style="margin:0; color:var(--text-secondary)">\${mod.description}</p>
+                   
+                   <!-- Progress Bar -->
+                   <div class="progress-container">
+                        <div class="progress-bar" style="width: \${percent}%"></div>
+                   </div>
+                   <div style="font-size:0.8rem; color:var(--text-tertiary); margin-top:0.5rem; text-align:right">\${percent}% Complete</div>
                 </div>
-                <button class="btn btn-secondary">Start</button>
+                <button class="btn btn-secondary" style="margin-left:1.5rem">Continue</button>
             </div>
         \`;
         list.appendChild(el);
@@ -300,10 +392,12 @@ function renderModule(roleId, moduleId) {
     
     const list = document.getElementById('units-list');
     mod.units.forEach((u, i) => {
+        const isComplete = ProgressManager.isComplete(roleId, u.id);
         const item = document.createElement('div');
         item.innerText = u.title;
-        item.className = 'sidebar-item animate-in'; 
+        item.className = \`sidebar-item animate-in \${isComplete ? 'completed' : ''}\`; 
         item.id = \`unit-item-\${i}\`;
+        item.style.position = 'relative';
         item.onclick = () => loadUnit(roleId, moduleId, i);
         list.appendChild(item);
     });
@@ -329,18 +423,14 @@ function loadUnit(roleId, moduleId, index) {
     document.getElementById('unit-counter').innerText = \`Unit \${index + 1} / \${mod.units.length}\`;
     document.getElementById('unit-title').innerText = unit.title;
     
-    // Default to Learn Tab
     switchTab('learn');
 
-    // 1. Render Markdown
+    // Render Content
     document.getElementById('markdown-content').innerHTML = marked.parse(unit.content);
     
-    // Syntax Highlighting & Copy Button
     if (window.Prism) {
         document.querySelectorAll('pre code').forEach((block) => {
             Prism.highlightElement(block);
-            
-            // Add Copy Button
             const pre = block.parentElement;
             pre.style.position = 'relative';
             const btn = document.createElement('button');
@@ -360,7 +450,24 @@ function loadUnit(roleId, moduleId, index) {
         });
     }
 
-    // 2. Render Visualization (Mindmap)
+    // Mark Complete Button
+    const isComplete = ProgressManager.isComplete(roleId, unit.id);
+    const completeBtn = document.createElement('div');
+    completeBtn.style.marginTop = '2rem';
+    completeBtn.innerHTML = \`
+        <button id="mark-complete-btn" class="btn \${isComplete ? 'btn-secondary' : 'btn-primary'}" style="width:100%" onclick="toggleComplete('\${roleId}', '\${unit.id}', this)">
+            \${isComplete ? 'Completed <i data-lucide="check" width="16"></i>' : 'Mark as Complete'}
+        </button>
+    \`;
+    const mdContent = document.getElementById('markdown-content');
+    // Remove old button if exists (not robust but okay for static page refresh)
+    const oldBtn = document.getElementById('mark-complete-container');
+    if(oldBtn) oldBtn.remove();
+    completeBtn.id = 'mark-complete-container';
+    mdContent.appendChild(completeBtn);
+
+
+    // Mindmap
     if (window.markmap && unit.mindmap) {
         const transformer = new markmap.Transformer();
         const { root } = transformer.transform(unit.mindmap);
@@ -370,7 +477,7 @@ function loadUnit(roleId, moduleId, index) {
         document.getElementById('markmap').innerHTML = ''; 
     }
 
-    // 3. Render Practice (Q&A)
+    // Q&A
     const qaContainer = document.getElementById('qa-container');
     qaContainer.innerHTML = '';
     if (unit.qa) {
@@ -406,7 +513,7 @@ function loadUnit(roleId, moduleId, index) {
         \`;
     }
 
-    // Playground embedded
+    // Playground
     const playground = document.getElementById('playground-container');
     playground.innerHTML = ''; 
     if (unit.type === 'code') {
@@ -430,16 +537,39 @@ function loadUnit(roleId, moduleId, index) {
         });
     }
 
-    // Nav Buttons
+    // Nav
     const nextBtn = document.getElementById('next-btn');
     nextBtn.innerHTML = index === mod.units.length - 1 ? 'Finish Module <i data-lucide="check" width="16"></i>' : 'Next Unit <i data-lucide="arrow-right" width="16"></i>';
     nextBtn.onclick = () => {
+         if(!ProgressManager.isComplete(roleId, unit.id)) {
+             ProgressManager.save(roleId, unit.id); // Auto-save on next
+         }
          if (index < mod.units.length - 1) loadUnit(roleId, moduleId, index + 1);
          else window.location.href = \`dashboard.html?role=\${roleId}\`;
     };
     
     lucide.createIcons();
     setTimeout(window.observeAnimations, 100);
+}
+
+window.toggleComplete = function(roleId, unitId, btn) {
+    const isComplete = ProgressManager.isComplete(roleId, unitId);
+    if(isComplete) {
+        ProgressManager.remove(roleId, unitId);
+        btn.innerHTML = 'Mark as Complete';
+        btn.className = 'btn btn-primary';
+        // Update sidebar
+        const sidebarItem = [...document.querySelectorAll('.sidebar-item')].find(el => el.onclick.toString().includes(unitId) || el.className.includes('active')); // Loose match
+         if(sidebarItem) sidebarItem.classList.remove('completed');
+    } else {
+        ProgressManager.save(roleId, unitId);
+        btn.innerHTML = 'Completed <i data-lucide="check" width="16"></i>';
+        btn.className = 'btn btn-secondary';
+        showToast('Progress saved!', 'success');
+        // Update sidebar
+        if(document.querySelector('.sidebar-item.active')) document.querySelector('.sidebar-item.active').classList.add('completed');
+    }
+    lucide.createIcons();
 }
 
 window.switchTab = function(tabName) {
