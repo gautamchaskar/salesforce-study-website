@@ -23,6 +23,16 @@ Salesforce is a cloud-based CRM platform providing a single view of your custome
 * **Multi-tenancy**: Shared infrastructure (building) with private data (apartment).
 * **Metadata-Driven**: Data stored separately from customizations.
             `,
+            flashcards: [
+              {
+                front: "What is Multi-tenancy?",
+                back: "A software architecture where a single instance of software runs on a server and serves multiple tenants.",
+              },
+              {
+                front: "What is Metadata?",
+                back: "Data that describes other data. In Salesforce, it refers to the configuration (fields, layouts, code) rather than the records themselves.",
+              },
+            ],
             quiz: [
               {
                 question: "What is Multi-tenancy?",
@@ -53,6 +63,16 @@ Base level of access.
 *   **Public Read Only**: Everyone can view.
 *   **Public Read/Write**: Everyone can edit.
             `,
+            flashcards: [
+              {
+                front: "What are the 4 levels of data security?",
+                back: "Org, Object, Field, Record.",
+              },
+              {
+                front: "Does Role Hierarchy overrule OWD?",
+                back: "Yes, for 'Grant Access Using Hierarchies' (standard objects primarily).",
+              },
+            ],
             quiz: [
               {
                 question: "Which manages Record Level Security?",
@@ -122,6 +142,16 @@ trigger AccountTrigger on Account (before insert) {
 }
 \`\`\`
             `,
+            flashcards: [
+              {
+                front: "Order of Execution Mnemonic?",
+                back: "'Very Big Cats Scratched A White Post' (Validation, Before, CustomVal, Save, After, Workflow, Process)",
+              },
+              {
+                front: "Can you modify Trigger.new in After Trigger?",
+                back: "No, it causes a runtime error because the record is read-only.",
+              },
+            ],
             qa: [
               {
                 q: "What is the order of execution?",
@@ -234,6 +264,16 @@ public class MyQueueable implements Queueable {
 }
 \`\`\`
                   `,
+            flashcards: [
+              {
+                front: "Future vs Queueable: Complex Types?",
+                back: "Future: Primitives only. Queueable: Supports Objects/Classes.",
+              },
+              {
+                front: "Which one supports chaining?",
+                back: "Queueable Apex (system.enqueueJob).",
+              },
+            ],
             quiz: [
               {
                 question: "Which Async type allows Object parameters?",
@@ -305,21 +345,191 @@ export default class Child extends LightningElement {
   },
   qa: {
     title: "QA Engineer",
-    description: "Testing Strategies",
+    description: "Testing Nuances & Automation",
     color: "#FFB700",
-    modules: [],
+    modules: [
+      {
+        id: "qa-m1",
+        title: "Salesforce Testing Nuances",
+        description: "Governor Limits, Shadow DOM, and Unit Tests.",
+        units: [
+          {
+            id: "qa-m1-u1",
+            title: "Governor Limits in Testing",
+            type: "theory",
+            content: `
+# Testing & Governor Limits
+Unlike traditional apps, Salesforce tests must respect multi-tenant limits.
+
+### Bulk Testing
+*   **Scenario**: What happens if a user uploads 200 records at once?
+*   **Risk**: SOQL inside loops, Single DML limits.
+*   **Best Practice**: Always test with a list of records (\`List<Account>\`), not just one.
+
+### Unit Testing
+*   **Requirement**: 75% coverage for deployment.
+*   \`Test.startTest()\` and \`Test.stopTest()\`: Resets governor limits for the specific block of code being tested.
+                      `,
+            flashcards: [
+              {
+                front: "Min Code Coverage for Deploy?",
+                back: "75% on average.",
+              },
+              {
+                front: "What does Test.startTest() do?",
+                back: "Resets the governor limits for the code block inside it.",
+              },
+            ],
+            quiz: [
+              {
+                question: "Why do we use Test.startTest()?",
+                options: [
+                  "To start a timer",
+                  "To reset governor limits",
+                  "To mock data",
+                ],
+                correctAnswer: 1,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "qa-m2",
+        title: "Automation Tools",
+        description: "Selenium vs Provar vs Copado.",
+        units: [
+          {
+            id: "qa-m2-u1",
+            title: "Selenium & Shadow DOM",
+            type: "theory",
+            content: `
+# Selenium Challenges
+Salesforce LWC uses **Shadow DOM**, which encapsulates component internals. Standard Selenium locators (XPath/CSS) often fail because they can't pierce the shadow boundary.
+
+### Solutions
+*   **Wdio**: WebDriverIO has better shadow root support.
+*   **Page Object Model (POM)**: Abstract locator logic.
+*   **Provar/Copado**: Specialized tools that handle Salesforce metadata automatically.
+                     `,
+            flashcards: [
+              {
+                front: "Why does Selenium struggle with LWC?",
+                back: "Shadow DOM encapsulation hides elements from standard DOM queries.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
   ba: {
-    title: "Analyst",
-    description: "Requirements",
+    title: "Business Analyst",
+    description: "Agile, User Stories, UAT",
     color: "#FF5D5D",
-    modules: [],
+    modules: [
+      {
+        id: "ba-m1",
+        title: "Requirements Gathering",
+        description: "User Stories and Acceptance Criteria.",
+        units: [
+          {
+            id: "ba-m1-u1",
+            title: "User Stories",
+            type: "theory",
+            content: `
+# The User Story
+"As a <Persona>, I want to <Action>, so that <Value>."
+
+### INVEST Criteria
+*   **I**ndependent
+*   **N**egotiable
+*   **V**aluable
+*   **E**stimatable
+*   **S**mall
+*   **T**estable
+
+### Acceptance Criteria (AC)
+The "Definition of Done". Specific conditions that must be met for the story to be accepted.
+                      `,
+            flashcards: [
+              {
+                front: "User Story Format",
+                back: "As a <Persona>, I want to <Action>, so that <Value>.",
+              },
+              {
+                front: "What is INVEST?",
+                back: "Independent, Negotiable, Valuable, Estimatable, Small, Testable.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
   architect: {
     title: "Architect",
-    description: "System Design",
+    description: "Integration & Scalability",
     color: "#9059FF",
-    modules: [],
+    modules: [
+      {
+        id: "arch-m1",
+        title: "Integration Patterns",
+        description: "REST vs SOAP, Middleware, Event-Driven.",
+        units: [
+          {
+            id: "arch-m1-u1",
+            title: "Integration Patterns Matrix",
+            type: "theory",
+            content: `
+# Integration Patterns
+
+| Pattern | Scenario | Solution |
+| :--- | :--- | :--- |
+| **Request-Reply** | User waits for ext system (e.g., Credit Check) | REST/SOAP Callout (Sync) |
+| **Fire and Forget** | Update ERP, no immediate response needed | Platform Events / Outbound Msg |
+| **Batch Sync** | Nightly data warehouse sync | Bulk API / ETL Tool |
+| **UI Update** | Show stock price change in real-time | Streaming API (Push Topics) |
+                      `,
+            flashcards: [
+              { front: "Best API for 1 Million Records?", back: "Bulk API." },
+              {
+                front: "Real-time updates to UI?",
+                back: "Streaming API / Platform Events.",
+              },
+            ],
+          },
+          {
+            id: "arch-m1-u2",
+            title: "Data Skew",
+            type: "theory",
+            content: `
+# Large Data Volumes (LDV) & Skew
+
+### Account Skew
+> 10,000 child records linked to a single Account.
+*   **Issue**: Record locking during updates.
+*   **Fix**: Distribute children across dummy accounts.
+
+### Ownership Skew
+> 10,000 records owned by one user.
+*   **Issue**: Performance drag on sharing calculations.
+*   **Fix**: Assign to multiple users or valid Queues.
+                      `,
+            flashcards: [
+              {
+                front: "Threshold for Account Skew?",
+                back: "> 10,000 child records.",
+              },
+              {
+                front: "What is Ownership Skew?",
+                back: "One user owning > 10k records, causing sharing calc issues.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
 };
 
@@ -557,6 +767,42 @@ function loadUnit(roleId, moduleId, index) {
         setTimeout(() => (btn.innerText = "Copy"), 2000);
       };
       pre.appendChild(btn);
+    });
+  }
+
+  /* FLASHCARD RENDERER */
+  const flashcardContainer = document.getElementById("flashcard-section");
+  if (!flashcardContainer) {
+    // Create container if missing (dynamic append)
+    const fc = document.createElement("div");
+    fc.id = "flashcard-section";
+    fc.style.marginTop = "2rem";
+    document.getElementById("markdown-content").appendChild(fc);
+  }
+  const fcSection = document.getElementById("flashcard-section");
+  fcSection.innerHTML = ""; // Clear prev
+
+  if (unit.flashcards && unit.flashcards.length > 0) {
+    unit.flashcards.forEach((card, idx) => {
+      const fcDiv = document.createElement("div");
+      fcDiv.className = "flashcard-container animate-in stagger-2";
+      fcDiv.onclick = function () {
+        this.querySelector(".flashcard").classList.toggle("flipped");
+      };
+      fcDiv.innerHTML = `
+                <div class="flashcard">
+                    <div class="flashcard-front">
+                        <i data-lucide="help-circle" width="32" style="margin-bottom:1rem; opacity:0.5"></i>
+                        <p>${card.front}</p>
+                        <p class="flashcard-hint">(Click to flip)</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <i data-lucide="lightbulb" width="32" style="margin-bottom:1rem; color:var(--accent)"></i>
+                        <p>${card.back}</p>
+                    </div>
+                </div>
+             `;
+      fcSection.appendChild(fcDiv);
     });
   }
 
