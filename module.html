@@ -8,6 +8,9 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markmap-common"></script>
     <script src="script.js"></script>
   </head>
   <body>
@@ -65,19 +68,73 @@
             >
               Loading...
             </h1>
-            <div id="markdown-content"></div>
-            <div id="playground-container" style="margin-top: 2rem"></div>
+
+            <!-- Tabs -->
             <div
-              id="quiz-container"
+              class="tabs flex gap-4"
               style="
-                margin-top: 3rem;
-                padding: 1.5rem;
-                background: var(--bg-glass);
-                border-radius: var(--radius-md);
-                display: none;
+                margin-bottom: 2rem;
+                border-bottom: 1px solid var(--border-glass);
+                padding-bottom: 1rem;
               "
             >
-              <div id="quiz-content"></div>
+              <button
+                id="tab-learn"
+                class="tab-btn active"
+                onclick="switchTab('learn')"
+              >
+                Learn
+              </button>
+              <button
+                id="tab-visualize"
+                class="tab-btn"
+                onclick="switchTab('visualize')"
+              >
+                Visualize
+              </button>
+              <button
+                id="tab-practice"
+                class="tab-btn"
+                onclick="switchTab('practice')"
+              >
+                Practice
+              </button>
+            </div>
+
+            <!-- Views -->
+            <div id="view-learn" class="tab-view" style="display: block">
+              <div id="markdown-content"></div>
+              <div id="playground-container" style="margin-top: 2rem"></div>
+            </div>
+
+            <div id="view-visualize" class="tab-view" style="display: none">
+              <div
+                class="glass-panel"
+                style="
+                  background: rgba(255, 255, 255, 0.02);
+                  height: 500px;
+                  padding: 0;
+                  overflow: hidden;
+                "
+              >
+                <svg id="markmap" style="width: 100%; height: 100%"></svg>
+              </div>
+            </div>
+
+            <div id="view-practice" class="tab-view" style="display: none">
+              <div id="qa-container"></div>
+              <div
+                id="quiz-container"
+                style="
+                  margin-top: 2rem;
+                  padding: 1.5rem;
+                  background: var(--bg-glass);
+                  border-radius: var(--radius-md);
+                  display: none;
+                "
+              >
+                <div id="quiz-content"></div>
+              </div>
             </div>
             <div
               class="flex justify-between items-center"
